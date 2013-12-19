@@ -157,7 +157,7 @@ static NSMutableDictionary * gHistory;
 + (id) movieViewControllerWithContentPath: (NSString *) path
                                parameters: (NSDictionary *) parameters
 {    
-    id<KxAudioManager> audioManager = [KxAudioManager audioManager];
+    id<KxAudioManagerInterface> audioManager = [KxAudioManager audioManager];
     [audioManager activateAudioSession];    
     return [[KxMovieViewController alloc] initWithContentPath: path parameters: parameters];
 }
@@ -964,7 +964,7 @@ static NSMutableDictionary * gHistory;
 
 - (void) enableAudio: (BOOL) on
 {
-    id<KxAudioManager> audioManager = [KxAudioManager audioManager];
+    id<KxAudioManagerInterface> audioManager = [KxAudioManager audioManager];
             
     if (on && _decoder.validAudio) {
                 
@@ -996,7 +996,7 @@ static NSMutableDictionary * gHistory;
             for (KxMovieFrame *frame in frames)
                 if (frame.type == KxMovieFrameTypeVideo) {
                     [_videoFrames addObject:frame];
-                    NSLog(@"%@",@"addvideoFrame");
+                    //NSLog(@"%@",@"addvideoFrame");
                     _bufferedDuration += frame.duration;
                 }
         }
@@ -1084,8 +1084,9 @@ static NSMutableDictionary * gHistory;
                 __strong KxMovieDecoder *decoder = weakDecoder;
                 
                 if (decoder && (decoder.validVideo || decoder.validAudio)) {
-                    
+
                     NSArray *frames = [decoder decodeFrames:duration];
+                    //NSLog(@"decoder position: %f",[decoder position]);
                     if (frames.count) {
                         
                         __strong KxMovieViewController *strongSelf = weakSelf;
@@ -1149,6 +1150,9 @@ static NSMutableDictionary * gHistory;
         
         const NSTimeInterval correction = [self tickCorrection];
         const NSTimeInterval time = MAX(interval + correction, 0.01);
+        
+        NSLog(@"correction:%f;interval:%f; time:%f",correction,interval,time);
+        
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, time * NSEC_PER_SEC);
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
             [self tick];
@@ -1177,6 +1181,8 @@ static NSMutableDictionary * gHistory;
     NSTimeInterval dPosition = _moviePosition - _tickCorrectionPosition;
     NSTimeInterval dTime = now - _tickCorrectionTime;
     NSTimeInterval correction = dPosition - dTime;
+    
+    NSLog(@"dPosition:%f;dTime:%f; correction:%f;_tickCorrectionPosition:%f",dPosition,dTime,correction,_tickCorrectionPosition);
     
     //if ((_tickCounter % 200) == 0)
     //    NSLog(@"tick correction %.4f", correction);

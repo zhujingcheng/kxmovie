@@ -24,7 +24,7 @@ static void sessionInterruptionListener(void *inClientData, UInt32 inInterruptio
 static OSStatus renderCallback (void *inRefCon, AudioUnitRenderActionFlags	*ioActionFlags, const AudioTimeStamp * inTimeStamp, UInt32 inOutputBusNumber, UInt32 inNumberFrames, AudioBufferList* ioData);
 
 
-@interface KxAudioManagerImpl : KxAudioManager<KxAudioManager> {
+@interface KxAudioManagerImpl : KxAudioManager<KxAudioManagerInterface> {
     
     BOOL                        _initialized;
     BOOL                        _activated;
@@ -48,6 +48,7 @@ static OSStatus renderCallback (void *inRefCon, AudioUnitRenderActionFlags	*ioAc
 - (BOOL) play;
 - (void) pause;
 
+
 - (BOOL) checkAudioRoute;
 - (BOOL) setupAudio;
 - (BOOL) checkSessionProperties;
@@ -58,7 +59,7 @@ static OSStatus renderCallback (void *inRefCon, AudioUnitRenderActionFlags	*ioAc
 
 @implementation KxAudioManager
 
-+ (id<KxAudioManager>) audioManager
++ (id<KxAudioManagerInterface>) audioManager
 {
     static KxAudioManagerImpl *audioManager = nil;
     static dispatch_once_t onceToken;
@@ -402,6 +403,7 @@ static OSStatus renderCallback (void *inRefCon, AudioUnitRenderActionFlags	*ioAc
     
     return _playing;
 }
+
 
 @end
 

@@ -115,7 +115,7 @@ typedef BOOL(^KxMovieDecoderInterruptCallback)();
             error: (NSError **) perror;
 
 -(void) closeFile;
-
+- (id) init;
 - (BOOL) setupVideoFrameFormat: (KxVideoFrameFormat) format;
 
 - (NSArray *) decodeFrames: (CGFloat) minDuration;

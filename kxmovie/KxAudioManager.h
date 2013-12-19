@@ -14,7 +14,7 @@
 
 typedef void (^KxAudioManagerOutputBlock)(float *data, UInt32 numFrames, UInt32 numChannels);
 
-@protocol KxAudioManager <NSObject>
+@protocol KxAudioManagerInterface <NSObject>
 
 @property (readonly) UInt32             numOutputChannels;
 @property (readonly) Float64            samplingRate;
@@ -30,8 +30,9 @@ typedef void (^KxAudioManagerOutputBlock)(float *data, UInt32 numFrames, UInt32 
 - (BOOL) play;
 - (void) pause;
 
+
 @end
 
 @interface KxAudioManager : NSObject
-+ (id<KxAudioManager>) audioManager;
++ (id<KxAudioManagerInterface>) audioManager;
 @end

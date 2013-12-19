@@ -79,7 +79,7 @@ static BOOL audioCodecIsSupported(AVCodecContext *audio)
 {
     if (audio->sample_fmt == AV_SAMPLE_FMT_S16) {
 
-        id<KxAudioManager> audioManager = [KxAudioManager audioManager];
+        id<KxAudioManagerInterface> audioManager = [KxAudioManager audioManager];
         return  (int)audioManager.samplingRate == audio->sample_rate &&
                 audioManager.numOutputChannels == audio->channels;
     }
@@ -703,6 +703,12 @@ static int interrupt_callback(void *ctx);
     return mp;
 }
 
+- (id) init
+{
+    self=[super init];
+    return self;
+}
+
 - (void) dealloc
 {
     NSLog(@"%@ dealloc", self);
@@ -893,7 +899,7 @@ static int interrupt_callback(void *ctx);
     
     if (!audioCodecIsSupported(codecCtx)) {
 
-        id<KxAudioManager> audioManager = [KxAudioManager audioManager];
+        id<KxAudioManagerInterface> audioManager = [KxAudioManager audioManager];
         swrContext = swr_alloc_set_opts(NULL,
                                         av_get_default_channel_layout(audioManager.numOutputChannels),
                                         AV_SAMPLE_FMT_S16,
@@ -1194,7 +1200,7 @@ static int interrupt_callback(void *ctx);
     if (!_audioFrame->data[0])
         return nil;
     
-    id<KxAudioManager> audioManager = [KxAudioManager audioManager];
+    id<KxAudioManagerInterface> audioManager = [KxAudioManager audioManager];
     
     const NSUInteger numChannels = audioManager.numOutputChannels;
     NSInteger numFrames;
